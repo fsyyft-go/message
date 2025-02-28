@@ -9,6 +9,7 @@ import (
 	"net"
 	"net/http"
 	"net/url"
+	"strings"
 	"time"
 	"unsafe"
 
@@ -103,6 +104,19 @@ func Parse(s *kratoshttp.Server, e *gin.Engine) {
 	routeInfos := GetPaths(s)
 
 	for _, routeInfo := range routeInfos {
+		// 处理带有查询参数的路径
+		path := routeInfo.path
+
+		// 查找第一个问号位置，分割路径和查询参数部分
+		if idx := strings.Index(path, "?"); idx >= 0 {
+			path = path[:idx]
+		}
+
+		// 确保路径不为空
+		if path == "" {
+			path = "/"
+		}
+
 		e.Handle(routeInfo.method, routeInfo.path, func(c *gin.Context) {
 			s.ServeHTTP(c.Writer, c.Request)
 		})
