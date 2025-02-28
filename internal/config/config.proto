@@ -1,6 +1,6 @@
 syntax = "proto3";
 
-package api;
+package internal.config;
 
 option go_package = "github.com/fsyyft-go/sms-bridge/internal/config;config";
 
