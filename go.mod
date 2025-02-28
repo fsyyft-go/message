@@ -1,12 +1,13 @@
 module github.com/fsyyft-go/sms-bridge
 
-go 1.24.1
+go 1.24
 
 require (
 	github.com/envoyproxy/protoc-gen-validate v1.2.1
 	github.com/fsyyft-go/kit v0.0.5
 	github.com/gin-gonic/gin v1.10.0
 	github.com/go-kratos/kratos/v2 v2.8.3
+	github.com/google/uuid v1.6.0
 	github.com/google/wire v0.6.0
 	github.com/gorilla/mux v1.8.1
 	google.golang.org/genproto/googleapis/api v0.0.0-20250303144028-a0af3efb3deb
@@ -42,7 +43,6 @@ require (
 require (
 	github.com/go-kratos/aegis v0.2.0 // indirect
 	github.com/go-playground/form/v4 v4.2.0 // indirect
-	github.com/google/uuid v1.6.0 // indirect
 	github.com/kr/text v0.1.0 // indirect
 	github.com/lestrrat-go/file-rotatelogs v2.4.0+incompatible // indirect
 	github.com/lestrrat-go/strftime v1.1.0 // indirect

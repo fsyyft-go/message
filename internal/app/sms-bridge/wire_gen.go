@@ -12,6 +12,7 @@ package sms_bridge
 
 import (
 	"github.com/fsyyft-go/kit/log"
+	"github.com/fsyyft-go/sms-bridge/internal/biz"
 	"github.com/fsyyft-go/sms-bridge/internal/config"
 	"github.com/fsyyft-go/sms-bridge/internal/server"
 	"github.com/fsyyft-go/sms-bridge/internal/service"
@@ -20,7 +21,8 @@ import (
 // Injectors from wire.go:
 
 func wireServer(logger log.Logger, cfg *config.Config) (*server.WebServer, func(), error) {
-	smsService := service.NewSmsService(logger, cfg)
+	smsBiz := biz.NewSmsBiz(logger, cfg)
+	smsService := service.NewSmsService(logger, cfg, smsBiz)
 	webServer, cleanup, err := server.NewWebServer(logger, cfg, smsService)
 	if err != nil {
 		return nil, nil, err
