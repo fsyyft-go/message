@@ -12,6 +12,7 @@ import (
 	"github.com/fsyyft-go/sms-bridge/api/sms"
 	"github.com/fsyyft-go/sms-bridge/internal/config"
 	"github.com/fsyyft-go/sms-bridge/internal/service"
+	bridge_kratos_http "github.com/fsyyft-go/sms-bridge/pkg/kratos/transport/http"
 )
 
 type (
@@ -34,6 +35,8 @@ func NewWebServer(logger log.Logger, cfg *config.Config, smsService *service.Sms
 		validate.Validator(),
 	))
 	sms.RegisterSmsServiceHTTPServer(server, smsService)
+
+	fmt.Println(bridge_kratos_http.GetPaths(server))
 
 	webServer.server = server
 
