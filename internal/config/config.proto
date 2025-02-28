@@ -8,7 +8,6 @@ package internal.config;
 
 option go_package = "github.com/fsyyft-go/sms-bridge/internal/config;config";
 
-import "google/protobuf/duration.proto";
 
 message Config {
     HTTP http = 1;
