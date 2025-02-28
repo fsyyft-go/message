@@ -22,12 +22,12 @@ import (
 // 该函数使用 Google Wire 进行依赖注入，自动组装应用程序组件。
 //
 // 参数：
-//   - cfg *config.Config：应用程序配置对象
+//   - cfg *config.Config：应用程序配置对象。
 //
 // 返回值：
-//   - *server.WebServer：初始化后的 Web 服务器实例
-//   - func()：清理函数，用于资源释放
-//   - error：初始化过程中可能发生的错误
+//   - *server.WebServer：初始化后的 Web 服务器实例。
+//   - func()：清理函数，用于资源释放。
+//   - error：初始化过程中可能发生的错误。
 func wireServer(cfg *config.Config) (*server.WebServer, func(), error) {
 	// wire.Build 函数用于声明依赖关系图，将所有组件连接在一起。
 	// panic 调用会在编译时被 wire 工具替换为实际的依赖注入代码。

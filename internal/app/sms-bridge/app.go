@@ -2,8 +2,6 @@
 //
 // Licensed under the MIT License. See LICENSE file in the project root for full license information.
 
-// Package sms_bridge 实现了短信网桥服务的主要应用逻辑。
-// 它负责配置加载、依赖注入和应用程序的启动流程。
 package sms_bridge
 
 import (
@@ -16,9 +14,8 @@ import (
 )
 
 var (
-	// ProviderSet 是一个 Wire 依赖注入提供者集合，用于注册可被注入的组件。
-	// 当前包含日志记录器的创建函数，作为应用程序依赖图的一部分。
-	// 该集合会在 wire.go 文件中与其他模块的提供者集合组合使用。
+	// ProviderSet 是一个Wire依赖注入提供者集合，用于注册可被注入的组件。
+	// 当前仅包含日志记录器的创建函数。
 	ProviderSet = wire.NewSet(
 		NewLogger,
 	)
@@ -30,19 +27,15 @@ var (
 // 2. 加载应用配置。
 // 3. 通过 Wire 框架初始化所有依赖。
 // 4. 启动 Web 服务器。
-//
-// 该函数不接受任何参数，作为程序的主入口点使用。
-// 如果初始化过程中发生错误，函数会在控制台输出错误信息并退出。
 func Run() {
-	// 定义配置文件路径变量，默认为 "configs/config.yaml"。
+	// 定义配置文件路径变量，默认为"configs/config.yaml"。
 	var configPath string
 
-	// 注册命令行参数，用于指定配置文件路径
+	// 注册命令行参数，用于指定配置文件路径。
 	flag.StringVar(&configPath, "config", "configs/config.yaml", "配置文件路径")
-	// 解析命令行参数
 	flag.Parse()
 
-	// 从指定路径加载配置文件
+	// 从指定路径加载配置文件。
 	cfg, err := config.LoadConfig(configPath)
 	if nil != err {
 		fmt.Printf("加载配置文件失败：%v", err)
@@ -53,10 +46,10 @@ func Run() {
 	// 该函数会自动注入所有依赖项并返回配置好的 Web 服务器实例。
 	if webServer, cleanup, err := wireServer(cfg); err != nil {
 		fmt.Printf("初始化失败：%v", err)
-		// 调用清理函数释放已分配的资源
+		// 调用清理函数释放已分配的资源。
 		cleanup()
 	} else {
-		// 启动 Web 服务器
+		// 启动Web服务器。
 		_ = webServer.Start()
 	}
 }
