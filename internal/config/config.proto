@@ -1,0 +1,16 @@
+syntax = "proto3";
+
+package api;
+
+option go_package = "github.com/fsyyft-go/sms-bridge/internal/config;config";
+
+import "google/protobuf/duration.proto";
+
+message Config {
+    HTTP http = 1;
+}
+
+message HTTP {
+    string addr = 1;
+    int32 port = 2;
+}
