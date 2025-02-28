@@ -19,4 +19,5 @@ message HTTP {
 message Log {
     string type = 1;
     string output = 2;
+    string level = 3;
 }

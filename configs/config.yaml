@@ -4,3 +4,4 @@ http:
 log:
   type: logrus
   output: logs/sms-bridge.log
+  level: debug

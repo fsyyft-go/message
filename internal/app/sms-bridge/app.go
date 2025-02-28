@@ -27,7 +27,15 @@ func Run() {
 		panic(err)
 	}
 
-	if webServer, cleanup, err := wireServer(log.GetLogger(), cfg); err != nil {
+	logger := log.GetLogger()
+	if level, err := log.ParseLevel(cfg.Log.Level); err != nil {
+		logger.Error("解析日志级别失败", "error", err)
+	} else {
+		logger.SetLevel(level)
+		logger.WithField("level", level).Info("设置日志级别")
+	}
+
+	if webServer, cleanup, err := wireServer(logger, cfg); err != nil {
 		cleanup()
 	} else {
 		_ = webServer.Start()
