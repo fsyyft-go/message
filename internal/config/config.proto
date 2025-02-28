@@ -8,9 +8,15 @@ import "google/protobuf/duration.proto";
 
 message Config {
     HTTP http = 1;
+    Log log = 2;
 }
 
 message HTTP {
     string addr = 1;
     int32 port = 2;
+}
+
+message Log {
+    string type = 1;
+    string output = 2;
 }
