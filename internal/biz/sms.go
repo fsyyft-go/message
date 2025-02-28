@@ -29,15 +29,14 @@ type (
 type SmsBiz struct {
 	logger log.Logger
 	cfg    *config.Config
-
-	repo SmsRepo
+	repo   SmsRepo
 }
 
-func NewSmsBiz(logger log.Logger, cfg *config.Config) *SmsBiz {
+func NewSmsBiz(logger log.Logger, cfg *config.Config, repo SmsRepo) *SmsBiz {
 	return &SmsBiz{
 		logger: logger.WithField("ddd", "biz").WithField("module", "sms"),
 		cfg:    cfg,
-		repo:   nil,
+		repo:   repo,
 	}
 }
 
@@ -49,6 +48,11 @@ func (s *SmsBiz) SendSms(ctx context.Context, sms *SmsInfo) error {
 		l.Debug("")
 	} else {
 		l.Warn("请求参数为空")
+	}
+
+	if err := s.repo.Save(ctx, sms); nil != err {
+		l.WithField("error", err).Error("保存短信失败")
+		return err
 	}
 
 	return nil

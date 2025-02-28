@@ -14,6 +14,7 @@ import (
 
 	"github.com/fsyyft-go/sms-bridge/internal/biz"
 	"github.com/fsyyft-go/sms-bridge/internal/config"
+	"github.com/fsyyft-go/sms-bridge/internal/data"
 	"github.com/fsyyft-go/sms-bridge/internal/server"
 	"github.com/fsyyft-go/sms-bridge/internal/service"
 )
@@ -34,6 +35,8 @@ func wireServer(cfg *config.Config) (*server.WebServer, func(), error) {
 	panic(wire.Build(
 		// 引入当前包中定义的提供者集合。
 		ProviderSet,
+		// 引入数据层的提供者集合。
+		data.ProviderSet,
 		// 引入业务逻辑层的提供者集合。
 		biz.ProviderSet,
 		// 引入服务层的提供者集合。
