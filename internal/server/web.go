@@ -19,7 +19,6 @@ type (
 	WebServer struct {
 		logger log.Logger
 		cfg    *config.Config
-		// server *http.Server
 		engine *gin.Engine
 	}
 )
@@ -37,10 +36,6 @@ func NewWebServer(logger log.Logger, cfg *config.Config, smsService *service.Sms
 	))
 	sms.RegisterSmsServiceHTTPServer(server, smsService)
 
-	// mt.Println(bridge_kratos_http.GetPaths(server))
-
-	// webServer.server = server
-
 	webServer.engine = gin.Default()
 	bridge_kratos_http.Parse(server, webServer.engine)
 
@@ -50,11 +45,5 @@ func NewWebServer(logger log.Logger, cfg *config.Config, smsService *service.Sms
 }
 
 func (s *WebServer) Start() error {
-	// listener, err := net.Listen("tcp", fmt.Sprintf(":%d", s.cfg.Http.Port))
-	// if err != nil {
-	// 	return err
-	// }
-
-	// return s.server.Serve(listener)
 	return s.engine.Run(fmt.Sprintf(":%d", s.cfg.Http.Port))
 }

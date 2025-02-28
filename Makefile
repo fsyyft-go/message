@@ -43,3 +43,7 @@ config:
 generate:
 	go mod tidy
 	go generate ./...
+
+.PHONY: lint
+lint:
+	golangci-lint run

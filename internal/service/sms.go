@@ -16,9 +16,13 @@ type (
 )
 
 func NewSmsService(logger log.Logger, cfg *config.Config) *SmsService {
-	return &SmsService{}
+	return &SmsService{
+		logger: logger,
+		cfg:    cfg,
+	}
 }
 
 func (s *SmsService) SendSms(ctx context.Context, req *sms.SendSmsRequest) (*sms.SendSmsResponse, error) {
-	return nil, nil
+	s.logger.Debug("SendSms", "from", req.From, "to", req.To, "message", req.Message)
+	return &sms.SendSmsResponse{}, nil
 }
