@@ -20,8 +20,10 @@ message SendSmsResponse {
 service SmsService {
     rpc SendSms(SendSmsRequest) returns (SendSmsResponse) {
         option (google.api.http) = {
-            post: "sms/bridge"
-            body: "*"
+            get: "sms/bridge"
+            additional_bindings {
+                get: "sms/bridge/?from={from}&to={to}&message={message}"
+            }
         };
     }
 }

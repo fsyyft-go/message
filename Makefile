@@ -24,6 +24,14 @@ api:
  	       --openapi_out==paths=source_relative:./api \
 	       $(API_PROTO_FILES)
 
+.PHONY: validate
+validate:
+	protoc --proto_path=. \
+           --proto_path=./api/third_party \
+           --go_out=paths=source_relative:. \
+           --validate_out=paths=source_relative,lang=go:. \
+           $(API_PROTO_FILES)
+
 .PHONY: config
 config:
 	protoc --proto_path=. \

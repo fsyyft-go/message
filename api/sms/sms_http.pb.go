@@ -27,15 +27,35 @@ type SmsServiceHTTPServer interface {
 
 func RegisterSmsServiceHTTPServer(s *http.Server, srv SmsServiceHTTPServer) {
 	r := s.Route("/")
-	r.POST("sms/bridge", _SmsService_SendSms0_HTTP_Handler(srv))
+	r.GET("sms/bridge/?from={from}&to={to}&message={message}", _SmsService_SendSms0_HTTP_Handler(srv))
+	r.GET("sms/bridge", _SmsService_SendSms1_HTTP_Handler(srv))
 }
 
 func _SmsService_SendSms0_HTTP_Handler(srv SmsServiceHTTPServer) func(ctx http.Context) error {
 	return func(ctx http.Context) error {
 		var in SendSmsRequest
-		if err := ctx.Bind(&in); err != nil {
+		if err := ctx.BindQuery(&in); err != nil {
 			return err
 		}
+		if err := ctx.BindVars(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationSmsServiceSendSms)
+		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+			return srv.SendSms(ctx, req.(*SendSmsRequest))
+		})
+		out, err := h(ctx, &in)
+		if err != nil {
+			return err
+		}
+		reply := out.(*SendSmsResponse)
+		return ctx.Result(200, reply)
+	}
+}
+
+func _SmsService_SendSms1_HTTP_Handler(srv SmsServiceHTTPServer) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in SendSmsRequest
 		if err := ctx.BindQuery(&in); err != nil {
 			return err
 		}
@@ -67,10 +87,10 @@ func NewSmsServiceHTTPClient(client *http.Client) SmsServiceHTTPClient {
 func (c *SmsServiceHTTPClientImpl) SendSms(ctx context.Context, in *SendSmsRequest, opts ...http.CallOption) (*SendSmsResponse, error) {
 	var out SendSmsResponse
 	pattern := "sms/bridge"
-	path := binding.EncodeURL(pattern, in, false)
+	path := binding.EncodeURL(pattern, in, true)
 	opts = append(opts, http.Operation(OperationSmsServiceSendSms))
 	opts = append(opts, http.PathTemplate(pattern))
-	err := c.cc.Invoke(ctx, "POST", path, in, &out, opts...)
+	err := c.cc.Invoke(ctx, "GET", path, nil, &out, opts...)
 	if err != nil {
 		return nil, err
 	}

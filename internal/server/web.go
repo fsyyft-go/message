@@ -1,58 +1,52 @@
 package server
 
 import (
-	"context"
-	"net/http"
-	"time"
+	"fmt"
+	"net"
 
-	"github.com/gin-gonic/gin"
+	"github.com/go-kratos/kratos/v2/middleware/recovery"
+	"github.com/go-kratos/kratos/v2/middleware/validate"
+	"github.com/go-kratos/kratos/v2/transport/http"
 
 	"github.com/fsyyft-go/kit/log"
+	"github.com/fsyyft-go/sms-bridge/api/sms"
 	"github.com/fsyyft-go/sms-bridge/internal/config"
+	"github.com/fsyyft-go/sms-bridge/internal/service"
 )
 
 type (
 	WebServer struct {
 		logger log.Logger
 		cfg    *config.Config
-		srv    *gin.Engine
 		server *http.Server
 	}
 )
 
-func NewWebServer(logger log.Logger, cfg *config.Config) (*WebServer, func(), error) {
+func NewWebServer(logger log.Logger, cfg *config.Config, smsService *service.SmsService) (*WebServer, func(), error) {
 	var err error
-
 	webServer := &WebServer{
 		logger: logger,
 		cfg:    cfg,
-		srv:    gin.Default(),
 	}
 
-	// 设置服务器配置
-	webServer.server = &http.Server{
-		Addr:    cfg.Http.Addr,
-		Handler: webServer.srv,
-		// 设置读写超时
-		ReadTimeout:  30 * time.Second,
-		WriteTimeout: 30 * time.Second,
-		IdleTimeout:  120 * time.Second,
-	}
+	server := http.NewServer(http.Middleware(
+		recovery.Recovery(),
+		validate.Validator(),
+	))
+	sms.RegisterSmsServiceHTTPServer(server, smsService)
 
-	var cleanup = func() {
-		if nil != webServer.server {
-			ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
-			defer cancel()
+	webServer.server = server
 
-			if err := webServer.server.Shutdown(ctx); err != nil {
-				webServer.logger.Errorf("关闭 HTTP 服务失败：%v", err)
-			}
-		}
-	}
+	var cleanup = func() {}
 
 	return webServer, cleanup, err
 }
 
 func (s *WebServer) Start() error {
-	return s.server.ListenAndServe()
+	listener, err := net.Listen("tcp", fmt.Sprintf(":%d", s.cfg.Http.Port))
+	if err != nil {
+		return err
+	}
+
+	return s.server.Serve(listener)
 }
