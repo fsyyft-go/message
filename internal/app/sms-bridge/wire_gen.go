@@ -11,7 +11,6 @@
 package sms_bridge
 
 import (
-	"github.com/fsyyft-go/kit/log"
 	"github.com/fsyyft-go/sms-bridge/internal/biz"
 	"github.com/fsyyft-go/sms-bridge/internal/config"
 	"github.com/fsyyft-go/sms-bridge/internal/server"
@@ -20,14 +19,30 @@ import (
 
 // Injectors from wire.go:
 
-func wireServer(logger log.Logger, cfg *config.Config) (*server.WebServer, func(), error) {
-	smsBiz := biz.NewSmsBiz(logger, cfg)
-	smsService := service.NewSmsService(logger, cfg, smsBiz)
-	webServer, cleanup, err := server.NewWebServer(logger, cfg, smsService)
+// wireServer 函数用于构建和初始化 WebServer 实例。
+// 该函数使用 Google Wire 进行依赖注入，自动组装应用程序组件。
+//
+// 参数：
+//   - cfg *config.Config：应用程序配置对象
+//
+// 返回值：
+//   - *server.WebServer：初始化后的 Web 服务器实例
+//   - func()：清理函数，用于资源释放
+//   - error：初始化过程中可能发生的错误
+func wireServer(cfg *config.Config) (*server.WebServer, func(), error) {
+	logLogger, cleanup, err := NewLogger(cfg)
 	if err != nil {
 		return nil, nil, err
 	}
+	smsBiz := biz.NewSmsBiz(logLogger, cfg)
+	smsService := service.NewSmsService(logLogger, cfg, smsBiz)
+	webServer, cleanup2, err := server.NewWebServer(logLogger, cfg, smsService)
+	if err != nil {
+		cleanup()
+		return nil, nil, err
+	}
 	return webServer, func() {
+		cleanup2()
 		cleanup()
 	}, nil
 }
