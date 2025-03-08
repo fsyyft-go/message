@@ -27,10 +27,10 @@ import (
 //   - cfg *config.Config：应用程序配置对象。
 //
 // 返回值：
-//   - *server.WebServer：初始化后的 Web 服务器实例。
+//   - server.WebServer：初始化后的 Web 服务器实例。
 //   - func()：清理函数，用于资源释放。
 //   - error：初始化过程中可能发生的错误。
-func wireServer(cfg *config.Config) (*server.WebServer, func(), error) {
+func wireServer(cfg *config.Config) (server.WebServer, func(), error) {
 	logLogger, cleanup, err := NewLogger(cfg)
 	if err != nil {
 		return nil, nil, err
@@ -42,8 +42,8 @@ func wireServer(cfg *config.Config) (*server.WebServer, func(), error) {
 	}
 	smsRepo := data.NewSmsRepo(logLogger, cfg, smsCache)
 	smsBiz := biz.NewSmsBiz(logLogger, cfg, smsRepo)
-	smsService := service.NewSmsService(logLogger, cfg, smsBiz)
-	webServer, cleanup3, err := server.NewWebServer(logLogger, cfg, smsService)
+	smsServiceHTTPServer := service.NewSmsService(logLogger, cfg, smsBiz)
+	webServer, cleanup3, err := server.NewWebServer(logLogger, cfg, smsServiceHTTPServer)
 	if err != nil {
 		cleanup2()
 		cleanup()

@@ -15,21 +15,24 @@ import (
 	"github.com/fsyyft-go/kit/log"
 	"github.com/fsyyft-go/sms-bridge/api/sms"
 	"github.com/fsyyft-go/sms-bridge/internal/config"
-	"github.com/fsyyft-go/sms-bridge/internal/service"
 	bridge_kratos_http "github.com/fsyyft-go/sms-bridge/pkg/kratos/transport/http"
 )
 
 type (
-	WebServer struct {
+	WebServer interface {
+		Start() error
+	}
+
+	webServer struct {
 		logger log.Logger
 		cfg    *config.Config
 		engine *gin.Engine
 	}
 )
 
-func NewWebServer(logger log.Logger, cfg *config.Config, smsService *service.SmsService) (*WebServer, func(), error) {
+func NewWebServer(logger log.Logger, cfg *config.Config, smsService sms.SmsServiceHTTPServer) (WebServer, func(), error) {
 	var err error
-	webServer := &WebServer{
+	webServer := &webServer{
 		logger: logger,
 		cfg:    cfg,
 	}
@@ -48,6 +51,6 @@ func NewWebServer(logger log.Logger, cfg *config.Config, smsService *service.Sms
 	return webServer, cleanup, err
 }
 
-func (s *WebServer) Start() error {
+func (s *webServer) Start() error {
 	return s.engine.Run(fmt.Sprintf(":%d", s.cfg.Http.Port))
 }

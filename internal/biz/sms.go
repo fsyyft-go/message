@@ -38,6 +38,36 @@ type (
 
 // 仓储接口定义结束。
 
+// 领域接口定义开始。
+
+type (
+	// SmsBiz 定义了短信业务的领域接口。
+	// 该接口提供了发送短信和查询短信记录的基本功能。
+	// 具体实现可以是内存缓存、数据库等多种形式。
+	SmsBiz interface {
+		// SendSms 发送短信。
+		// 参数:
+		//   ctx: 上下文。
+		//   sms: 短信记录。
+		// 返回:
+		//   错误信息。
+		SendSms(ctx context.Context, sms *SmsInfo) error
+
+		// List 查询短信记录。
+		// 参数:
+		//   ctx: 上下文。
+		// 返回:
+		//   短信记录列表。
+		List(ctx context.Context) ([]*SmsInfo, error)
+	}
+)
+
+// 领域接口定义结束。
+
+var (
+	_ SmsBiz = (*smsBiz)(nil)
+)
+
 type (
 	SmsInfo struct {
 		ID        string    `json:"id"`
@@ -46,23 +76,23 @@ type (
 		Message   string    `json:"message"`
 		CreatedAt time.Time `json:"created_at"`
 	}
+
+	smsBiz struct {
+		logger log.Logger
+		cfg    *config.Config
+		repo   SmsRepo
+	}
 )
 
-type SmsBiz struct {
-	logger log.Logger
-	cfg    *config.Config
-	repo   SmsRepo
-}
-
-func NewSmsBiz(logger log.Logger, cfg *config.Config, repo SmsRepo) *SmsBiz {
-	return &SmsBiz{
+func NewSmsBiz(logger log.Logger, cfg *config.Config, repo SmsRepo) SmsBiz {
+	return &smsBiz{
 		logger: logger.WithField("ddd", "biz").WithField("module", "sms"),
 		cfg:    cfg,
 		repo:   repo,
 	}
 }
 
-func (s *SmsBiz) SendSms(ctx context.Context, sms *SmsInfo) error {
+func (s *smsBiz) SendSms(ctx context.Context, sms *SmsInfo) error {
 	l := s.logger
 
 	if nil != sms {
@@ -80,6 +110,6 @@ func (s *SmsBiz) SendSms(ctx context.Context, sms *SmsInfo) error {
 	return nil
 }
 
-func (s *SmsBiz) List(ctx context.Context) ([]*SmsInfo, error) {
+func (s *smsBiz) List(ctx context.Context) ([]*SmsInfo, error) {
 	return s.repo.List(ctx)
 }

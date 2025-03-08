@@ -17,27 +17,27 @@ import (
 )
 
 var (
-	_ sms.SmsServiceHTTPServer = (*SmsService)(nil)
+	_ sms.SmsServiceHTTPServer = (*smsService)(nil)
 )
 
 type (
-	SmsService struct {
+	smsService struct {
 		logger log.Logger
 		cfg    *config.Config
 
-		biz *biz.SmsBiz
+		biz biz.SmsBiz
 	}
 )
 
-func NewSmsService(logger log.Logger, cfg *config.Config, biz *biz.SmsBiz) *SmsService {
-	return &SmsService{
+func NewSmsService(logger log.Logger, cfg *config.Config, biz biz.SmsBiz) sms.SmsServiceHTTPServer {
+	return &smsService{
 		logger: logger.WithField("ddd", "service").WithField("module", "sms"),
 		cfg:    cfg,
 		biz:    biz,
 	}
 }
 
-func (s *SmsService) SendSms(ctx context.Context, req *sms.SendSmsRequest) (*sms.SendSmsResponse, error) {
+func (s *smsService) SendSms(ctx context.Context, req *sms.SendSmsRequest) (*sms.SendSmsResponse, error) {
 	l := s.logger
 
 	if nil != req {
@@ -67,7 +67,7 @@ func (s *SmsService) SendSms(ctx context.Context, req *sms.SendSmsRequest) (*sms
 	}, nil
 }
 
-func (s *SmsService) ListSms(ctx context.Context, req *sms.ListSmsRequest) (*sms.ListSmsResponse, error) {
+func (s *smsService) ListSms(ctx context.Context, req *sms.ListSmsRequest) (*sms.ListSmsResponse, error) {
 	infos, err := s.biz.List(ctx)
 	if nil != err {
 		s.logger.WithField("error", err).Error("获取短信列表失败")
