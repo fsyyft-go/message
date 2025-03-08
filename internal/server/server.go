@@ -11,6 +11,9 @@ import (
 
 var (
 	// ProviderSet 是服务器层的依赖注入提供者集合。
-	// 包含 Web 服务器的创建函数。
-	ProviderSet = wire.NewSet(NewWebServer)
+	// 包含 Web 服务器和认证器的创建函数。
+	ProviderSet = wire.NewSet(
+		NewAuthenticator,
+		NewWebServer,
+	)
 )

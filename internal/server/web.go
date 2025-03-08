@@ -10,6 +10,7 @@ import (
 	"fmt"
 
 	"github.com/gin-gonic/gin"
+	"github.com/go-kratos/kratos/v2/middleware"
 	"github.com/go-kratos/kratos/v2/middleware/recovery"
 	"github.com/go-kratos/kratos/v2/middleware/selector"
 	"github.com/go-kratos/kratos/v2/middleware/validate"
@@ -68,25 +69,38 @@ func needAuthMatcher(ctx context.Context, operation string) bool {
 //   - logger log.Logger：日志记录器。
 //   - cfg *config.Config：应用配置。
 //   - smsService sms.SmsServiceHTTPServer：短信服务 HTTP 接口实例。
+//   - auth Authenticator：认证器实例。
 //
 // 返回值：
 //   - WebServer：Web 服务器接口实例。
 //   - func()：清理函数，用于资源释放。
 //   - error：初始化过程中可能发生的错误。
-func NewWebServer(logger log.Logger, cfg *config.Config, smsService sms.SmsServiceHTTPServer) (WebServer, func(), error) {
+func NewWebServer(logger log.Logger, cfg *config.Config, smsService sms.SmsServiceHTTPServer, auth Authenticator) (WebServer, func(), error) {
 	var err error
+
+	l := logger.WithField("ddd", "server").WithField("module", "web")
+
 	webServer := &webServer{
-		logger: logger,
+		logger: l,
 		cfg:    cfg,
 	}
 
 	// 创建带基本认证的选择器中间件。
-	authMiddleware := selector.Server(
-		basicauth.Server(
-			basicauth.WithValidator(Authenticate),   // 使用我们定义的认证函数。
-			basicauth.WithRealm("SMS Bridge Admin"), // 设置认证域，会显示在浏览器的认证对话框中。
-		),
-	).Match(needAuthMatcher).Build()
+	var authMiddleware middleware.Middleware
+	if cfg.Http.Basicauth.Enabled {
+		authMiddleware = selector.Server(
+			basicauth.Server(
+				basicauth.WithValidator(auth.Authenticate),    // 使用认证器实例的 Authenticate 方法。
+				basicauth.WithRealm(cfg.Http.Basicauth.Realm), // 设置认证域，会显示在浏览器的认证对话框中。
+			),
+		).Match(needAuthMatcher).Build()
+	} else {
+		// 不启用认证时，使用空的选择器中间件。
+		l.Warn("基本认证未启用，所有请求将不进行认证")
+		authMiddleware = selector.Server().Match(func(ctx context.Context, operation string) bool {
+			return false // 不匹配任何路径，相当于不应用认证。
+		}).Build()
+	}
 
 	server := http.NewServer(http.Middleware(
 		recovery.Recovery(),

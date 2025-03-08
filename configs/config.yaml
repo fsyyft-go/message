@@ -2,6 +2,14 @@
 http:
   addr: 0.0.0.0  # 监听地址，0.0.0.0 表示监听所有网络接口。
   port: 44444    # 监听端口。
+  basicauth:      # BasicAuth 认证配置。
+    enabled: true # 是否启用基本认证。
+    realm: SMS Bridge Admin # 认证域，显示在浏览器认证对话框中。
+    credentials:  # 基本认证用户列表。
+      - username: admin     # 用户名。
+        password: admin     # 密码。
+      - username: user      # 用户名。
+        password: user      # 密码。
 
 # 日志配置。
 log:

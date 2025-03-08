@@ -29,6 +29,26 @@ message HTTP {
   string addr = 1;
   // 服务器监听端口。
   int32 port = 2;
+  // 基本认证配置。
+  BasicAuth basicauth = 3;
+}
+
+// BasicAuth 定义基本认证的配置。
+message BasicAuth {
+  // 是否启用基本认证。
+  bool enabled = 1;
+  // 认证域，显示在浏览器认证对话框中。
+  string realm = 2;
+  // 用户凭证列表。
+  repeated Credential credentials = 3;
+}
+
+// Credential 定义用户凭证。
+message Credential {
+  // 用户名。
+  string username = 1;
+  // 密码。
+  string password = 2;
 }
 
 // Log 定义日志系统的配置。

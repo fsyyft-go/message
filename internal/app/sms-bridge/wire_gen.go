@@ -43,13 +43,21 @@ func wireServer(cfg *config.Config) (server.WebServer, func(), error) {
 	smsRepo := data.NewSmsRepo(logLogger, cfg, smsCache)
 	smsBiz := biz.NewSmsBiz(logLogger, cfg, smsRepo)
 	smsServiceHTTPServer := service.NewSmsService(logLogger, cfg, smsBiz)
-	webServer, cleanup3, err := server.NewWebServer(logLogger, cfg, smsServiceHTTPServer)
+	authenticator, cleanup3, err := server.NewAuthenticator(logLogger, cfg)
 	if err != nil {
 		cleanup2()
 		cleanup()
 		return nil, nil, err
 	}
+	webServer, cleanup4, err := server.NewWebServer(logLogger, cfg, smsServiceHTTPServer, authenticator)
+	if err != nil {
+		cleanup3()
+		cleanup2()
+		cleanup()
+		return nil, nil, err
+	}
 	return webServer, func() {
+		cleanup4()
 		cleanup3()
 		cleanup2()
 		cleanup()
