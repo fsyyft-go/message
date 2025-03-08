@@ -10,16 +10,17 @@ import (
 	"fmt"
 
 	"github.com/gin-gonic/gin"
+	"github.com/go-kratos/kratos/v2/errors"
 	"github.com/go-kratos/kratos/v2/middleware"
 	"github.com/go-kratos/kratos/v2/middleware/recovery"
 	"github.com/go-kratos/kratos/v2/middleware/selector"
-	"github.com/go-kratos/kratos/v2/middleware/validate"
 	"github.com/go-kratos/kratos/v2/transport/http"
 
 	"github.com/fsyyft-go/kit/log"
 	"github.com/fsyyft-go/sms-bridge/api/sms"
 	"github.com/fsyyft-go/sms-bridge/internal/config"
 	"github.com/fsyyft-go/sms-bridge/pkg/kratos/middleware/basicauth"
+	"github.com/fsyyft-go/sms-bridge/pkg/kratos/middleware/validate"
 	bridge_kratos_http "github.com/fsyyft-go/sms-bridge/pkg/kratos/transport/http"
 )
 
@@ -58,7 +59,7 @@ const (
 // 返回值：
 //   - bool：如果操作需要认证，返回 true；否则返回 false。
 func needAuthMatcher(ctx context.Context, operation string) bool {
-	// 只有 ListSms 操作需要认证，返回 true 表示要应用认证中间件
+	// 只有 ListSms 操作需要认证，返回 true 表示要应用认证中间件。
 	return operation == OperationListSms
 }
 
@@ -77,8 +78,10 @@ func needAuthMatcher(ctx context.Context, operation string) bool {
 func NewWebServer(logger log.Logger, cfg *config.Config, smsService sms.SmsServiceHTTPServer, auth Authenticator) (WebServer, func(), error) {
 	var err error
 
+	// 创建带有领域驱动设计和模块标记的日志记录器。
 	l := logger.WithField("ddd", "server").WithField("module", "web")
 
+	// 初始化 webServer 结构体。
 	webServer := &webServer{
 		logger: l,
 		cfg:    cfg,
@@ -87,6 +90,7 @@ func NewWebServer(logger log.Logger, cfg *config.Config, smsService sms.SmsServi
 	// 创建带基本认证的选择器中间件。
 	var authMiddleware middleware.Middleware
 	if cfg.Http.Basicauth.Enabled {
+		// 如果启用了基本认证，创建带有认证器的中间件。
 		authMiddleware = selector.Server(
 			basicauth.Server(
 				basicauth.WithValidator(auth.Authenticate),    // 使用认证器实例的 Authenticate 方法。
@@ -101,19 +105,43 @@ func NewWebServer(logger log.Logger, cfg *config.Config, smsService sms.SmsServi
 		}).Build()
 	}
 
+	// 创建 HTTP 服务器，配置中间件链。
 	server := http.NewServer(http.Middleware(
-		recovery.Recovery(),
-		validate.Validator(),
+		recovery.Recovery(), // 添加恢复中间件，处理 panic。
+		validate.Validator(validate.WithValidateCallback(webServer.validateCallback)), // 添加请求验证中间件。
 		authMiddleware, // 添加带选择器的认证中间件。
 	))
+	// 注册短信服务的 HTTP 处理函数。
 	sms.RegisterSmsServiceHTTPServer(server, smsService)
 
+	// 初始化 Gin 引擎，并配置默认中间件。
 	webServer.engine = gin.Default()
+	// 将 Kratos HTTP 服务解析到 Gin 引擎中。
 	bridge_kratos_http.Parse(server, webServer.engine)
 
+	// 定义清理函数，用于资源释放。
 	var cleanup = func() {}
 
+	// 返回 Web 服务器实例、清理函数和错误。
 	return webServer, cleanup, err
+}
+
+// validateCallback 处理请求验证失败的回调函数。
+// 记录请求和验证错误，并返回标准化的错误响应。
+//
+// 参数：
+//   - ctx context.Context：上下文。
+//   - req interface{}：原始请求。
+//   - errValidate error：验证过程中产生的错误。
+//
+// 返回值：
+//   - interface{}：处理后的请求（本实现中返回 nil）。
+//   - error：格式化后的错误信息。
+func (s *webServer) validateCallback(ctx context.Context, req interface{}, errValidate error) (interface{}, error) {
+	// 记录请求和验证错误信息。
+	s.logger.WithField("req", req).WithField("errValidate", errValidate).Info("validateCallback")
+	// 返回标准化的错误响应。
+	return nil, errors.BadRequest("VALIDATOR", "请求参数错误，详见日志")
 }
 
 // Start 实现启动 Web 服务器的功能。
@@ -122,5 +150,6 @@ func NewWebServer(logger log.Logger, cfg *config.Config, smsService sms.SmsServi
 // 返回值：
 //   - error：启动过程中可能发生的错误。
 func (s *webServer) Start() error {
+	// 使用 Gin 引擎在配置的端口上启动 HTTP 服务。
 	return s.engine.Run(fmt.Sprintf(":%d", s.cfg.Http.Port))
 }
