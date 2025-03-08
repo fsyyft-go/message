@@ -15,8 +15,8 @@ github.com/envoyproxy/protoc-gen-validate v1.2.1 h1:DEo3O99U8j4hBFwbJfrz9VtgcDfU
 github.com/envoyproxy/protoc-gen-validate v1.2.1/go.mod h1:d/C80l/jxXLdfEIhX1W2TmLfsJ31lvEjwamM4DxlWXU=
 github.com/fsnotify/fsnotify v1.6.0 h1:n+5WquG0fcWoWp6xPWfHdbskMCQaFnG6PfBrh1Ky4HY=
 github.com/fsnotify/fsnotify v1.6.0/go.mod h1:sl3t1tCWJFWoRz9R8WJCbQihKKwmorjAbSClcnxKAGw=
-github.com/fsyyft-go/kit v0.0.6-0.20250313014146-daba967c5f31 h1:oC1TaRpZ8yn9fv3HTRYStNDL69bzKYg0aEufF2GJ0bE=
-github.com/fsyyft-go/kit v0.0.6-0.20250313014146-daba967c5f31/go.mod h1:4IDeLSuNTICwjyAJyosQFV6yjkwvCzjH5Y+usvTELB0=
+github.com/fsyyft-go/kit v0.0.6 h1:Q6BspSSn5a9Vz6FYTsV3ZfijAzbyLRJAI376yDA5S7c=
+github.com/fsyyft-go/kit v0.0.6/go.mod h1:4IDeLSuNTICwjyAJyosQFV6yjkwvCzjH5Y+usvTELB0=
 github.com/gabriel-vasile/mimetype v1.4.3 h1:in2uUcidCuFcDKtdcBxlR0rJ1+fsokWf+uqxgUFjbI0=
 github.com/gabriel-vasile/mimetype v1.4.3/go.mod h1:d8uq/6HKRL6CGdk+aubisF/M5GcPfT7nKyLpA0lbSSk=
 github.com/gin-contrib/sse v0.1.0 h1:Y/yl/+YNO8GZSjAhjMsSuLt29uWRFHdHYUb5lYOV9qE=
