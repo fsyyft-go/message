@@ -6,6 +6,7 @@ package service
 
 import (
 	"context"
+	"time"
 
 	"github.com/google/uuid"
 
@@ -43,10 +44,11 @@ func (s *SmsService) SendSms(ctx context.Context, req *sms.SendSmsRequest) (*sms
 	}
 
 	smsInfo := &biz.SmsInfo{
-		ID:      uuid.New().String(),
-		From:    req.From,
-		To:      req.To,
-		Message: req.Message,
+		ID:        uuid.New().String(),
+		From:      req.From,
+		To:        req.To,
+		Message:   req.Message,
+		CreatedAt: time.Now(),
 	}
 
 	err := s.biz.SendSms(ctx, smsInfo)

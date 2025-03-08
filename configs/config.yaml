@@ -5,3 +5,7 @@ log:
   type: logrus
   output: logs/sms-bridge.log
   level: debug
+sms:
+  cache:
+    interval: 60
+    time: 3600

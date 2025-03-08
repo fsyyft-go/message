@@ -8,19 +8,30 @@ package internal.config;
 
 option go_package = "github.com/fsyyft-go/sms-bridge/internal/config;config";
 
+// 使用 _ 命名可能出现解析失败，原因未知。
 
 message Config {
-    HTTP http = 1;
-    Log log = 2;
+  HTTP http = 1;
+  Log log = 2;
+  Sms sms = 3;
 }
 
 message HTTP {
-    string addr = 1;
-    int32 port = 2;
+  string addr = 1;
+  int32 port = 2;
 }
 
 message Log {
-    string type = 1;
-    string output = 2;
-    string level = 3;
+  string type = 1;
+  string output = 2;
+  string level = 3;
+}
+
+message Sms {
+  Cache cache = 1;
+}
+
+message Cache {
+  int32 interval = 1;
+  int32 time = 2;
 }
