@@ -5,11 +5,11 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "Launch SMS Bridge",
+            "name": "Launch Message",
             "type": "go",
             "request": "launch",
             "mode": "debug",
-            "program": "${workspaceFolder}/cmd/sms-bridge/main.go",
+            "program": "${workspaceFolder}/cmd/message/main.go",
             "args": [
                 "--config",
                 "${workspaceFolder}/configs/config.yaml"
