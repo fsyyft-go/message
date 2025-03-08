@@ -186,7 +186,7 @@ func Parse(s *kratoshttp.Server, e *gin.Engine) {
 
 		// 在 Gin 中注册路由处理函数。
 		// 将请求代理到 Kratos HTTP 服务器处理。
-		e.Handle(routeInfo.method, routeInfo.path, func(c *gin.Context) {
+		e.Handle(routeInfo.method, path, func(c *gin.Context) {
 			s.ServeHTTP(c.Writer, c.Request)
 		})
 	}
