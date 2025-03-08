@@ -21,16 +21,15 @@ import (
 	"github.com/fsyyft-go/message/internal/config"
 	"github.com/fsyyft-go/message/pkg/kratos/middleware/basicauth"
 	"github.com/fsyyft-go/message/pkg/kratos/middleware/validate"
-	bridge_kratos_http "github.com/fsyyft-go/message/pkg/kratos/transport/http"
+	message_kratos_transport_http "github.com/fsyyft-go/message/pkg/kratos/transport/http"
+	message_pkg_runtime "github.com/fsyyft-go/message/pkg/runtime"
 )
 
 type (
 	// WebServer 定义了 Web 服务器的接口。
 	WebServer interface {
-		// Start 启动 Web 服务器。
-		// 返回：
-		//   - error：启动过程中可能发生的错误。
-		Start() error
+		message_pkg_runtime.Runner // 继承 Runner 接口，提供 Start 和 Stop 方法。
+		Engine() *gin.Engine       // 返回 Gin 引擎实例，允许外部访问和配置。
 	}
 
 	// webServer 实现了 WebServer 接口，提供 Web 服务器功能。
@@ -117,7 +116,7 @@ func NewWebServer(logger log.Logger, cfg *config.Config, smsService sms.SmsServi
 	// 初始化 Gin 引擎，并配置默认中间件。
 	webServer.engine = gin.Default()
 	// 将 Kratos HTTP 服务解析到 Gin 引擎中。
-	bridge_kratos_http.Parse(server, webServer.engine)
+	message_kratos_transport_http.Parse(server, webServer.engine)
 
 	// 定义清理函数，用于资源释放。
 	var cleanup = func() {}
@@ -149,7 +148,25 @@ func (s *webServer) validateCallback(ctx context.Context, req interface{}, errVa
 //
 // 返回值：
 //   - error：启动过程中可能发生的错误。
-func (s *webServer) Start() error {
+func (s *webServer) Start(ctx context.Context) error {
 	// 使用 Gin 引擎在配置的端口上启动 HTTP 服务。
 	return s.engine.Run(fmt.Sprintf(":%d", s.cfg.Http.Port))
+}
+
+// Stop 停止Web服务器。
+// 当前实现为空，因为Gin引擎没有提供优雅关闭的方法。
+//
+// 返回值：
+//   - error：停止过程中可能发生的错误，当前总是返回nil。
+func (s *webServer) Stop(ctx context.Context) error {
+	return nil
+}
+
+// Engine 返回 Gin 引擎实例。
+// 允许外部访问和配置 Gin 引擎。
+//
+// 返回值：
+//   - *gin.Engine：Gin引擎实例。
+func (s *webServer) Engine() *gin.Engine {
+	return s.engine
 }

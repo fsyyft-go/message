@@ -6,6 +6,7 @@
 package sms_bridge
 
 import (
+	"context"
 	"flag"
 	"fmt"
 
@@ -68,6 +69,6 @@ func Run() {
 		cleanup()
 	} else {
 		// 启动 Web 服务器。
-		_ = a.webServer.Start()
+		_ = a.webServer.Start(context.TODO())
 	}
 }
