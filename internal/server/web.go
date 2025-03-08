@@ -16,13 +16,13 @@ import (
 	"github.com/go-kratos/kratos/v2/middleware/selector"
 	"github.com/go-kratos/kratos/v2/transport/http"
 
+	kit_kratos_middleware_basicauth "github.com/fsyyft-go/kit/kratos/middleware/basicauth"
 	kit_kratos_transport_http "github.com/fsyyft-go/kit/kratos/transport/http"
 	kit_log "github.com/fsyyft-go/kit/log"
 	kit_runtime "github.com/fsyyft-go/kit/runtime"
 
 	"github.com/fsyyft-go/message/api/sms"
 	"github.com/fsyyft-go/message/internal/config"
-	"github.com/fsyyft-go/message/pkg/kratos/middleware/basicauth"
 	"github.com/fsyyft-go/message/pkg/kratos/middleware/validate"
 )
 
@@ -92,9 +92,9 @@ func NewWebServer(logger kit_log.Logger, cfg *config.Config, smsService sms.SmsS
 	if cfg.Http.Basicauth.Enabled {
 		// 如果启用了基本认证，创建带有认证器的中间件。
 		authMiddleware = selector.Server(
-			basicauth.Server(
-				basicauth.WithValidator(auth.Authenticate),    // 使用认证器实例的 Authenticate 方法。
-				basicauth.WithRealm(cfg.Http.Basicauth.Realm), // 设置认证域，会显示在浏览器的认证对话框中。
+			kit_kratos_middleware_basicauth.Server(
+				kit_kratos_middleware_basicauth.WithValidator(auth.Authenticate),    // 使用认证器实例的 Authenticate 方法。
+				kit_kratos_middleware_basicauth.WithRealm(cfg.Http.Basicauth.Realm), // 设置认证域，会显示在浏览器的认证对话框中。
 			),
 		).Match(needAuthMatcher).Build()
 	} else {
