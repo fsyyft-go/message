@@ -4,9 +4,9 @@ go 1.24
 
 require (
 	github.com/envoyproxy/protoc-gen-validate v1.2.1
-	github.com/fsyyft-go/kit v0.0.5
+	github.com/fsyyft-go/kit v0.0.6-0.20250312112218-18b33e2274c7
 	github.com/gin-gonic/gin v1.10.0
-	github.com/go-kratos/kratos/v2 v2.8.3
+	github.com/go-kratos/kratos/v2 v2.8.4
 	github.com/google/uuid v1.6.0
 	github.com/google/wire v0.6.0
 	github.com/gorilla/mux v1.8.1
@@ -43,7 +43,6 @@ require (
 require (
 	github.com/go-kratos/aegis v0.2.0 // indirect
 	github.com/go-playground/form/v4 v4.2.0 // indirect
-	github.com/kr/text v0.1.0 // indirect
 	github.com/lestrrat-go/file-rotatelogs v2.4.0+incompatible // indirect
 	github.com/lestrrat-go/strftime v1.1.0 // indirect
 	github.com/pkg/errors v0.9.1 // indirect

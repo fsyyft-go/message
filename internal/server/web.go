@@ -16,26 +16,27 @@ import (
 	"github.com/go-kratos/kratos/v2/middleware/selector"
 	"github.com/go-kratos/kratos/v2/transport/http"
 
-	"github.com/fsyyft-go/kit/log"
+	kit_log "github.com/fsyyft-go/kit/log"
+	kit_runtime "github.com/fsyyft-go/kit/runtime"
+
 	"github.com/fsyyft-go/message/api/sms"
 	"github.com/fsyyft-go/message/internal/config"
 	"github.com/fsyyft-go/message/pkg/kratos/middleware/basicauth"
 	"github.com/fsyyft-go/message/pkg/kratos/middleware/validate"
 	message_kratos_transport_http "github.com/fsyyft-go/message/pkg/kratos/transport/http"
-	message_pkg_runtime "github.com/fsyyft-go/message/pkg/runtime"
 )
 
 type (
 	// WebServer 定义了 Web 服务器的接口。
 	WebServer interface {
-		message_pkg_runtime.Runner // 继承 Runner 接口，提供 Start 和 Stop 方法。
-		Engine() *gin.Engine       // 返回 Gin 引擎实例，允许外部访问和配置。
+		kit_runtime.Runner   // 继承 Runner 接口，提供 Start 和 Stop 方法。
+		Engine() *gin.Engine // 返回 Gin 引擎实例，允许外部访问和配置。
 	}
 
 	// webServer 实现了 WebServer 接口，提供 Web 服务器功能。
 	webServer struct {
 		// 日志记录器。
-		logger log.Logger
+		logger kit_log.Logger
 		// 应用配置。
 		cfg *config.Config
 		// Gin 引擎，用于处理 HTTP 请求。
@@ -74,7 +75,7 @@ func needAuthMatcher(ctx context.Context, operation string) bool {
 //   - WebServer：Web 服务器接口实例。
 //   - func()：清理函数，用于资源释放。
 //   - error：初始化过程中可能发生的错误。
-func NewWebServer(logger log.Logger, cfg *config.Config, smsService sms.SmsServiceHTTPServer, auth Authenticator) (WebServer, func(), error) {
+func NewWebServer(logger kit_log.Logger, cfg *config.Config, smsService sms.SmsServiceHTTPServer, auth Authenticator) (WebServer, func(), error) {
 	var err error
 
 	// 创建带有领域驱动设计和模块标记的日志记录器。
