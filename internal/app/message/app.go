@@ -12,6 +12,8 @@ import (
 	"github.com/google/wire"
 
 	"github.com/fsyyft-go/message/internal/config"
+	"github.com/fsyyft-go/message/internal/server"
+	"github.com/fsyyft-go/message/internal/task"
 )
 
 var (
@@ -19,8 +21,23 @@ var (
 	// 当前仅包含日志记录器的创建函数。
 	ProviderSet = wire.NewSet(
 		NewLogger,
+		NewApp,
 	)
 )
+
+type (
+	App struct {
+		webServer server.WebServer
+		task      task.Task
+	}
+)
+
+func NewApp(webServer server.WebServer, task task.Task) *App {
+	return &App{
+		webServer: webServer,
+		task:      task,
+	}
+}
 
 // Run 函数是应用程序的入口点，负责启动短信网桥服务。
 // 它完成以下任务：
@@ -45,12 +62,12 @@ func Run() {
 
 	// 通过 Wire 框架生成的 wireServer 函数初始化服务。
 	// 该函数会自动注入所有依赖项并返回配置好的 Web 服务器实例。
-	if webServer, cleanup, err := wireServer(cfg); nil != err {
+	if a, cleanup, err := wireServer(cfg); nil != err {
 		fmt.Printf("初始化失败：%v", err)
 		// 调用清理函数释放已分配的资源。
 		cleanup()
 	} else {
 		// 启动 Web 服务器。
-		_ = webServer.Start()
+		_ = a.webServer.Start()
 	}
 }

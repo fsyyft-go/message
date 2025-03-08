@@ -18,6 +18,7 @@ import (
 	"github.com/fsyyft-go/message/internal/data"
 	"github.com/fsyyft-go/message/internal/server"
 	"github.com/fsyyft-go/message/internal/service"
+	"github.com/fsyyft-go/message/internal/task"
 )
 
 // wireServer 函数用于构建和初始化 WebServer 实例。
@@ -27,10 +28,10 @@ import (
 //   - cfg *config.Config：应用程序配置对象。
 //
 // 返回值：
-//   - server.WebServer：初始化后的 Web 服务器实例。
+//   - *App：初始化后的 App 实例。
 //   - func()：清理函数，用于资源释放。
 //   - error：初始化过程中可能发生的错误。
-func wireServer(cfg *config.Config) (server.WebServer, func(), error) {
+func wireServer(cfg *config.Config) (*App, func(), error) {
 	// wire.Build 函数用于声明依赖关系图，将所有组件连接在一起。
 	// panic 调用会在编译时被 wire 工具替换为实际的依赖注入代码。
 	panic(wire.Build(
@@ -42,6 +43,8 @@ func wireServer(cfg *config.Config) (server.WebServer, func(), error) {
 		biz.ProviderSet,
 		// 引入服务层的提供者集合。
 		service.ProviderSet,
+		// 引入任务层的提供者集合。
+		task.ProviderSet,
 		// 引入服务器层的提供者集合。
 		server.ProviderSet,
 	))
