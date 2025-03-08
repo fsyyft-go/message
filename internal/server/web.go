@@ -17,13 +17,13 @@ import (
 	"github.com/go-kratos/kratos/v2/transport/http"
 
 	kit_kratos_middleware_basicauth "github.com/fsyyft-go/kit/kratos/middleware/basicauth"
+	kit_kratos_middleware_validate "github.com/fsyyft-go/kit/kratos/middleware/validate"
 	kit_kratos_transport_http "github.com/fsyyft-go/kit/kratos/transport/http"
 	kit_log "github.com/fsyyft-go/kit/log"
 	kit_runtime "github.com/fsyyft-go/kit/runtime"
 
 	"github.com/fsyyft-go/message/api/sms"
 	"github.com/fsyyft-go/message/internal/config"
-	"github.com/fsyyft-go/message/pkg/kratos/middleware/validate"
 )
 
 type (
@@ -108,7 +108,7 @@ func NewWebServer(logger kit_log.Logger, cfg *config.Config, smsService sms.SmsS
 	// 创建 HTTP 服务器，配置中间件链。
 	server := http.NewServer(http.Middleware(
 		recovery.Recovery(), // 添加恢复中间件，处理 panic。
-		validate.Validator(validate.WithValidateCallback(webServer.validateCallback)), // 添加请求验证中间件。
+		kit_kratos_middleware_validate.Validator(kit_kratos_middleware_validate.WithValidateCallback(webServer.validateCallback)), // 添加请求验证中间件。
 		authMiddleware, // 添加带选择器的认证中间件。
 	))
 	// 注册短信服务的 HTTP 处理函数。
