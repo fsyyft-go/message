@@ -18,7 +18,7 @@ import (
 	"github.com/fsyyft-go/kit/log"
 	"github.com/fsyyft-go/sms-bridge/api/sms"
 	"github.com/fsyyft-go/sms-bridge/internal/config"
-	"github.com/fsyyft-go/sms-bridge/internal/middleware/basicauth"
+	"github.com/fsyyft-go/sms-bridge/pkg/kratos/middleware/basicauth"
 	bridge_kratos_http "github.com/fsyyft-go/sms-bridge/pkg/kratos/transport/http"
 )
 
