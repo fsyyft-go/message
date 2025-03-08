@@ -2,6 +2,7 @@
 //
 // Licensed under the MIT License. See LICENSE file in the project root for full license information.
 
+// package sms_bridge 实现了短信网桥服务的核心功能。
 package sms_bridge
 
 import (

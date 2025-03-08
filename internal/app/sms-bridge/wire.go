@@ -7,6 +7,7 @@
 //go:build wireinject
 // +build wireinject
 
+// package sms_bridge 实现了短信网桥服务的核心功能。
 package sms_bridge
 
 import (

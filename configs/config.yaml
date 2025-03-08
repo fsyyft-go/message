@@ -1,11 +1,16 @@
+# HTTP 服务器配置。
 http:
-  addr: 0.0.0.0
-  port: 44444
+  addr: 0.0.0.0  # 监听地址，0.0.0.0 表示监听所有网络接口。
+  port: 44444    # 监听端口。
+
+# 日志配置。
 log:
-  type: logrus
-  output: logs/sms-bridge.log
-  level: debug
+  type: logrus    # 日志类型，使用 logrus 日志库。
+  output: logs/sms-bridge.log  # 日志输出路径。
+  level: debug    # 日志级别，可选值：debug、info、warn、error。
+
+# 短信服务配置。
 sms:
   cache:
-    interval: 60
-    time: 3600
+    interval: 60  # 清理过期记录的间隔时间（秒）。
+    time: 3600    # 记录过期时间（秒），超过此时间的记录将被清理。

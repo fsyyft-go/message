@@ -2,6 +2,7 @@
 //
 // Licensed under the MIT License. See LICENSE file in the project root for full license information.
 
+// package sms_bridge 实现了短信网桥服务的核心功能。
 package sms_bridge
 
 import (
@@ -14,7 +15,7 @@ import (
 )
 
 var (
-	// ProviderSet 是一个Wire依赖注入提供者集合，用于注册可被注入的组件。
+	// ProviderSet 是一个 Wire 依赖注入提供者集合，用于注册可被注入的组件。
 	// 当前仅包含日志记录器的创建函数。
 	ProviderSet = wire.NewSet(
 		NewLogger,
@@ -49,7 +50,7 @@ func Run() {
 		// 调用清理函数释放已分配的资源。
 		cleanup()
 	} else {
-		// 启动Web服务器。
+		// 启动 Web 服务器。
 		_ = webServer.Start()
 	}
 }

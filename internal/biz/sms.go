@@ -2,6 +2,7 @@
 //
 // Licensed under the MIT License. See LICENSE file in the project root for full license information.
 
+// package biz 实现业务逻辑层，包含领域模型和业务规则。
 package biz
 
 import (
@@ -65,25 +66,45 @@ type (
 // 领域接口定义结束。
 
 var (
+	// 确保 smsBiz 实现了 SmsBiz 接口。
 	_ SmsBiz = (*smsBiz)(nil)
 )
 
 type (
+	// SmsInfo 定义短信信息结构。
 	SmsInfo struct {
-		ID        string    `json:"id"`
-		From      string    `json:"from"`
-		To        string    `json:"to"`
-		Message   string    `json:"message"`
+		// 短信唯一标识符。
+		ID string `json:"id"`
+		// 发送方手机号。
+		From string `json:"from"`
+		// 接收方手机号。
+		To string `json:"to"`
+		// 短信内容。
+		Message string `json:"message"`
+		// 创建时间。
 		CreatedAt time.Time `json:"created_at"`
 	}
 
+	// smsBiz 实现了 SmsBiz 接口，提供短信业务逻辑。
 	smsBiz struct {
+		// 日志记录器。
 		logger log.Logger
-		cfg    *config.Config
-		repo   SmsRepo
+		// 应用配置。
+		cfg *config.Config
+		// 短信仓储接口。
+		repo SmsRepo
 	}
 )
 
+// NewSmsBiz 创建短信业务逻辑实例。
+//
+// 参数：
+//   - logger log.Logger：日志记录器。
+//   - cfg *config.Config：应用配置。
+//   - repo SmsRepo：短信仓储接口。
+//
+// 返回值：
+//   - SmsBiz：短信业务逻辑接口实例。
 func NewSmsBiz(logger log.Logger, cfg *config.Config, repo SmsRepo) SmsBiz {
 	return &smsBiz{
 		logger: logger.WithField("ddd", "biz").WithField("module", "sms"),
@@ -92,6 +113,15 @@ func NewSmsBiz(logger log.Logger, cfg *config.Config, repo SmsRepo) SmsBiz {
 	}
 }
 
+// SendSms 实现发送短信的业务逻辑。
+// 将短信信息保存到仓储中。
+//
+// 参数：
+//   - ctx context.Context：上下文。
+//   - sms *SmsInfo：短信信息。
+//
+// 返回值：
+//   - error：处理过程中可能发生的错误。
 func (s *smsBiz) SendSms(ctx context.Context, sms *SmsInfo) error {
 	l := s.logger
 
@@ -110,6 +140,15 @@ func (s *smsBiz) SendSms(ctx context.Context, sms *SmsInfo) error {
 	return nil
 }
 
+// List 实现查询短信列表的业务逻辑。
+// 从仓储中获取所有短信记录。
+//
+// 参数：
+//   - ctx context.Context：上下文。
+//
+// 返回值：
+//   - []*SmsInfo：短信记录列表。
+//   - error：处理过程中可能发生的错误。
 func (s *smsBiz) List(ctx context.Context) ([]*SmsInfo, error) {
 	return s.repo.List(ctx)
 }
