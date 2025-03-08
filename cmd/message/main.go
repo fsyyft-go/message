@@ -6,7 +6,7 @@
 package main
 
 import (
-	sms "github.com/fsyyft-go/sms-bridge/internal/app/sms-bridge"
+	sms "github.com/fsyyft-go/message/internal/app/message"
 )
 
 // main 函数是应用程序的入口点，调用 sms 包中的 Run 函数启动短信网桥服务。

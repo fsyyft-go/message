@@ -17,11 +17,11 @@ import (
 	"github.com/go-kratos/kratos/v2/transport/http"
 
 	"github.com/fsyyft-go/kit/log"
-	"github.com/fsyyft-go/sms-bridge/api/sms"
-	"github.com/fsyyft-go/sms-bridge/internal/config"
-	"github.com/fsyyft-go/sms-bridge/pkg/kratos/middleware/basicauth"
-	"github.com/fsyyft-go/sms-bridge/pkg/kratos/middleware/validate"
-	bridge_kratos_http "github.com/fsyyft-go/sms-bridge/pkg/kratos/transport/http"
+	"github.com/fsyyft-go/message/api/sms"
+	"github.com/fsyyft-go/message/internal/config"
+	"github.com/fsyyft-go/message/pkg/kratos/middleware/basicauth"
+	"github.com/fsyyft-go/message/pkg/kratos/middleware/validate"
+	bridge_kratos_http "github.com/fsyyft-go/message/pkg/kratos/transport/http"
 )
 
 type (

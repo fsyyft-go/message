@@ -11,7 +11,7 @@ import (
 	"sync"
 
 	"github.com/fsyyft-go/kit/log"
-	"github.com/fsyyft-go/sms-bridge/internal/config"
+	"github.com/fsyyft-go/message/internal/config"
 )
 
 var (

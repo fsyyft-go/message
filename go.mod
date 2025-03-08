@@ -1,4 +1,4 @@
-module github.com/fsyyft-go/sms-bridge
+module github.com/fsyyft-go/message
 
 go 1.24
 

@@ -13,11 +13,11 @@ package sms_bridge
 import (
 	"github.com/google/wire"
 
-	"github.com/fsyyft-go/sms-bridge/internal/biz"
-	"github.com/fsyyft-go/sms-bridge/internal/config"
-	"github.com/fsyyft-go/sms-bridge/internal/data"
-	"github.com/fsyyft-go/sms-bridge/internal/server"
-	"github.com/fsyyft-go/sms-bridge/internal/service"
+	"github.com/fsyyft-go/message/internal/biz"
+	"github.com/fsyyft-go/message/internal/config"
+	"github.com/fsyyft-go/message/internal/data"
+	"github.com/fsyyft-go/message/internal/server"
+	"github.com/fsyyft-go/message/internal/service"
 )
 
 // wireServer 函数用于构建和初始化 WebServer 实例。

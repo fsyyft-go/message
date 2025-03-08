@@ -9,8 +9,8 @@ import (
 	"context"
 
 	"github.com/fsyyft-go/kit/log"
-	"github.com/fsyyft-go/sms-bridge/internal/biz"
-	"github.com/fsyyft-go/sms-bridge/internal/config"
+	"github.com/fsyyft-go/message/internal/biz"
+	"github.com/fsyyft-go/message/internal/config"
 )
 
 var (

@@ -14,7 +14,7 @@ import "google/api/annotations.proto";
 import "validate/validate.proto";
 
 // 指定生成的 Go 代码的包路径和包名。
-option go_package = "github.com/fsyyft-go/sms-bridge/api/sms;sms";
+option go_package = "github.com/fsyyft-go/message/api/sms;sms";
 
 // SendSmsRequest 定义发送短信的请求参数。
 message SendSmsRequest {

@@ -11,7 +11,7 @@ import (
 
 	"github.com/google/wire"
 
-	"github.com/fsyyft-go/sms-bridge/internal/config"
+	"github.com/fsyyft-go/message/internal/config"
 )
 
 var (

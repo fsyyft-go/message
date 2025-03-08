@@ -1,0 +1,15 @@
+[Unit]
+Description=Message Service
+Documentation=https://github.com/fsyyft-go/message
+After=network.target
+Wants=network.target
+
+[Service]
+Type=simple
+User=nobody
+Group=nobody
+WorkingDirectory=/data/webservers/tool/message
+ExecStart=/data/webservers/tool/message/message --config=/data/webservers/tool/message/message.conf > /data/wwwroot/log.ppno.net/wwwroot/message/stdout.log
+
+[Install]
+WantedBy=multi-user.target

@@ -9,7 +9,7 @@ syntax = "proto3";
 package internal.config;
 
 // 指定生成的 Go 代码的包路径和包名。
-option go_package = "github.com/fsyyft-go/sms-bridge/internal/config;config";
+option go_package = "github.com/fsyyft-go/message/internal/config;config";
 
 // 使用 _ 命名可能出现解析失败，原因未知。
 

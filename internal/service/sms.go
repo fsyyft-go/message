@@ -12,9 +12,9 @@ import (
 	"github.com/google/uuid"
 
 	"github.com/fsyyft-go/kit/log"
-	"github.com/fsyyft-go/sms-bridge/api/sms"
-	"github.com/fsyyft-go/sms-bridge/internal/biz"
-	"github.com/fsyyft-go/sms-bridge/internal/config"
+	"github.com/fsyyft-go/message/api/sms"
+	"github.com/fsyyft-go/message/internal/biz"
+	"github.com/fsyyft-go/message/internal/config"
 )
 
 var (

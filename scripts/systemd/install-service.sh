@@ -9,7 +9,7 @@ GROUP="nobody"
 LOG_ROOT_PREFIX="/data/wwwroot/log.ppno.net/wwwroot/tool"
 
 # 定义服务名称。
-SERVICE_NAME="sms-bridge"
+SERVICE_NAME="message"
 
 # 检查是否以 root 权限运行。
 if [ "$EUID" -ne 0 ]; then

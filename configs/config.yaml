@@ -14,7 +14,7 @@ http:
 # 日志配置。
 log:
   type: logrus    # 日志类型，使用 logrus 日志库。
-  output: logs/sms-bridge.log  # 日志输出路径。
+  output: logs/message.log  # 日志输出路径。
   level: debug    # 日志级别，可选值：debug、info、warn、error。
 
 # 短信服务配置。
