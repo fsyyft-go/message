@@ -16,6 +16,7 @@ import (
 	"github.com/go-kratos/kratos/v2/middleware/selector"
 	"github.com/go-kratos/kratos/v2/transport/http"
 
+	kit_kratos_transport_http "github.com/fsyyft-go/kit/kratos/transport/http"
 	kit_log "github.com/fsyyft-go/kit/log"
 	kit_runtime "github.com/fsyyft-go/kit/runtime"
 
@@ -23,7 +24,6 @@ import (
 	"github.com/fsyyft-go/message/internal/config"
 	"github.com/fsyyft-go/message/pkg/kratos/middleware/basicauth"
 	"github.com/fsyyft-go/message/pkg/kratos/middleware/validate"
-	message_kratos_transport_http "github.com/fsyyft-go/message/pkg/kratos/transport/http"
 )
 
 type (
@@ -117,7 +117,7 @@ func NewWebServer(logger kit_log.Logger, cfg *config.Config, smsService sms.SmsS
 	// 初始化 Gin 引擎，并配置默认中间件。
 	webServer.engine = gin.Default()
 	// 将 Kratos HTTP 服务解析到 Gin 引擎中。
-	message_kratos_transport_http.Parse(server, webServer.engine)
+	kit_kratos_transport_http.Parse(server, webServer.engine)
 
 	// 定义清理函数，用于资源释放。
 	var cleanup = func() {}
