@@ -4,24 +4,35 @@
 openapi: 3.0.3
 info:
     title: SmsService API
+    description: SmsService 定义短信服务接口。
     version: 0.0.1
 paths:
     sms/bridge:
         get:
             tags:
                 - SmsService
+            description: |-
+                SendSms 发送短信。
+                 提供两种 HTTP 路由：
+                 1. GET /sms/bridge
+                 2. GET /sms/bridge/?from={from}&to={to}&message={message}
             operationId: SmsService_SendSms
             parameters:
                 - name: from
                   in: query
+                  description: 发送方手机号，支持"+"开头后跟数字，或20位内的纯数字。
                   schema:
                     type: string
                 - name: to
                   in: query
+                  description: |-
+                    接收方手机号，必须符合中国大陆手机号格式。
+                     TODO iPhone 快捷指令的 + 号会被识别为空格，需要处理。
                   schema:
                     type: string
                 - name: message
                   in: query
+                  description: 短信内容，最大长度为 5120 字符。
                   schema:
                     type: string
             responses:
@@ -41,20 +52,30 @@ paths:
         get:
             tags:
                 - SmsService
+            description: |-
+                SendSms 发送短信。
+                 提供两种 HTTP 路由：
+                 1. GET /sms/bridge
+                 2. GET /sms/bridge/?from={from}&to={to}&message={message}
             operationId: SmsService_SendSms
             parameters:
                 - name: from
                   in: path
+                  description: 发送方手机号，支持"+"开头后跟数字，或20位内的纯数字。
                   required: true
                   schema:
                     type: string
                 - name: to
                   in: path
+                  description: |-
+                    接收方手机号，必须符合中国大陆手机号格式。
+                     TODO iPhone 快捷指令的 + 号会被识别为空格，需要处理。
                   required: true
                   schema:
                     type: string
                 - name: message
                   in: path
+                  description: 短信内容，最大长度为 5120 字符。
                   required: true
                   schema:
                     type: string
@@ -75,6 +96,9 @@ paths:
         get:
             tags:
                 - SmsService
+            description: |-
+                ListSms 查询短信列表。
+                 HTTP 路由：GET /sms/list
             operationId: SmsService_ListSms
             responses:
                 "200":
@@ -106,24 +130,34 @@ components:
                     type: array
                     items:
                         $ref: '#/components/schemas/SmsInfo'
+                    description: 短信列表。
+            description: ListSmsResponse 定义查询短信列表的响应结果。
         SendSmsResponse:
             type: object
             properties:
                 messageId:
                     type: string
+                    description: 短信唯一标识符。
+            description: SendSmsResponse 定义发送短信的响应结果。
         SmsInfo:
             type: object
             properties:
                 from:
                     type: string
+                    description: 发送方手机号。
                 to:
                     type: string
+                    description: 接收方手机号。
                 message:
                     type: string
+                    description: 短信内容。
                 messageId:
                     type: string
+                    description: 短信唯一标识符。
                 createdAt:
                     type: string
+                    description: 创建时间，ISO8601 格式的字符串。
+            description: SmsInfo 定义短信信息结构。
         Status:
             type: object
             properties:

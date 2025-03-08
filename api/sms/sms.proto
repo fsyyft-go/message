@@ -18,10 +18,11 @@ option go_package = "github.com/fsyyft-go/sms-bridge/api/sms;sms";
 
 // SendSmsRequest 定义发送短信的请求参数。
 message SendSmsRequest {
-  // 发送方手机号，必须符合中国大陆手机号格式。
-  string from = 1 [(validate.rules).string = { pattern: "^1[3-9]\\d{9}$" }];
+  // 发送方手机号，支持"+"开头后跟数字，或20位内的纯数字。
+  string from = 1 [(validate.rules).string = { pattern: "^(\\+\\d+|\\d{1,20})$" }];
   // 接收方手机号，必须符合中国大陆手机号格式。
-  string to = 2 [(validate.rules).string = { pattern: "^1[3-9]\\d{9}$" }];
+  // TODO iPhone 快捷指令的 + 号会被识别为空格，需要处理。
+  string to = 2;
   // 短信内容，最大长度为 5120 字符。
   string message = 3 [(validate.rules).string = { max_len: 5120 }];
 }
