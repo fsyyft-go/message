@@ -46,11 +46,11 @@ func NewLogger(cfg *config.Config) (log.Logger, func(), error) {
 			if l, errNew := log.NewLogger(
 				log.WithLogType(log.LogType(cfg.Log.Type)),
 				log.WithOutput(cfg.Log.Output),
-			); err != nil {
+			); nil != err {
 				err = errNew
 			} else {
 				// 设置日志级别。
-				if level, err := log.ParseLevel(cfg.Log.Level); err != nil {
+				if level, err := log.ParseLevel(cfg.Log.Level); nil != err {
 					l.WithField("error", err).Error("解析日志级别失败")
 				} else {
 					l.SetLevel(level)

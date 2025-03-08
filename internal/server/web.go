@@ -43,7 +43,6 @@ type (
 	}
 )
 
-// 定义需要认证的操作名称
 const (
 	// OperationListSms 是查询短信列表操作的名称，需要基本认证。
 	OperationListSms = "/api.sms.SmsService/ListSms"
