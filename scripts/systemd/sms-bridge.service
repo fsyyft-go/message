@@ -1,0 +1,15 @@
+[Unit]
+Description=SMS Bridge Service
+Documentation=https://github.com/fsyyft-go/sms-bridge
+After=network.target
+Wants=network.target
+
+[Service]
+Type=simple
+User=nobody
+Group=nobody
+WorkingDirectory=/data/webservers/tool/smb-bridge
+ExecStart=./smb-bridge --config=./smb-bridge.conf
+
+[Install]
+WantedBy=multi-user.target
