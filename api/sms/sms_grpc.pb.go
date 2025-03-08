@@ -24,6 +24,7 @@ const _ = grpc.SupportPackageIsVersion9
 
 const (
 	SmsService_SendSms_FullMethodName = "/api.sms.SmsService/SendSms"
+	SmsService_ListSms_FullMethodName = "/api.sms.SmsService/ListSms"
 )
 
 // SmsServiceClient is the client API for SmsService service.
@@ -31,6 +32,7 @@ const (
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type SmsServiceClient interface {
 	SendSms(ctx context.Context, in *SendSmsRequest, opts ...grpc.CallOption) (*SendSmsResponse, error)
+	ListSms(ctx context.Context, in *ListSmsRequest, opts ...grpc.CallOption) (*ListSmsResponse, error)
 }
 
 type smsServiceClient struct {
@@ -51,11 +53,22 @@ func (c *smsServiceClient) SendSms(ctx context.Context, in *SendSmsRequest, opts
 	return out, nil
 }
 
+func (c *smsServiceClient) ListSms(ctx context.Context, in *ListSmsRequest, opts ...grpc.CallOption) (*ListSmsResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(ListSmsResponse)
+	err := c.cc.Invoke(ctx, SmsService_ListSms_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // SmsServiceServer is the server API for SmsService service.
 // All implementations must embed UnimplementedSmsServiceServer
 // for forward compatibility.
 type SmsServiceServer interface {
 	SendSms(context.Context, *SendSmsRequest) (*SendSmsResponse, error)
+	ListSms(context.Context, *ListSmsRequest) (*ListSmsResponse, error)
 	mustEmbedUnimplementedSmsServiceServer()
 }
 
@@ -68,6 +81,9 @@ type UnimplementedSmsServiceServer struct{}
 
 func (UnimplementedSmsServiceServer) SendSms(context.Context, *SendSmsRequest) (*SendSmsResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method SendSms not implemented")
+}
+func (UnimplementedSmsServiceServer) ListSms(context.Context, *ListSmsRequest) (*ListSmsResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ListSms not implemented")
 }
 func (UnimplementedSmsServiceServer) mustEmbedUnimplementedSmsServiceServer() {}
 func (UnimplementedSmsServiceServer) testEmbeddedByValue()                    {}
@@ -108,6 +124,24 @@ func _SmsService_SendSms_Handler(srv interface{}, ctx context.Context, dec func(
 	return interceptor(ctx, in, info, handler)
 }
 
+func _SmsService_ListSms_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ListSmsRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(SmsServiceServer).ListSms(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: SmsService_ListSms_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(SmsServiceServer).ListSms(ctx, req.(*ListSmsRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // SmsService_ServiceDesc is the grpc.ServiceDesc for SmsService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -118,6 +152,10 @@ var SmsService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "SendSms",
 			Handler:    _SmsService_SendSms_Handler,
+		},
+		{
+			MethodName: "ListSms",
+			Handler:    _SmsService_ListSms_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

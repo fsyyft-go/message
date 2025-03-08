@@ -16,6 +16,10 @@ import (
 	"github.com/fsyyft-go/sms-bridge/internal/config"
 )
 
+var (
+	_ sms.SmsServiceHTTPServer = (*SmsService)(nil)
+)
+
 type (
 	SmsService struct {
 		logger log.Logger
@@ -60,5 +64,28 @@ func (s *SmsService) SendSms(ctx context.Context, req *sms.SendSmsRequest) (*sms
 
 	return &sms.SendSmsResponse{
 		MessageId: smsInfo.ID,
+	}, nil
+}
+
+func (s *SmsService) ListSms(ctx context.Context, req *sms.ListSmsRequest) (*sms.ListSmsResponse, error) {
+	infos, err := s.biz.List(ctx)
+	if nil != err {
+		s.logger.WithField("error", err).Error("获取短信列表失败")
+		return nil, err
+	}
+
+	smsInfos := make([]*sms.SmsInfo, 0, len(infos))
+	for _, info := range infos {
+		smsInfos = append(smsInfos, &sms.SmsInfo{
+			From:      info.From,
+			To:        info.To,
+			Message:   info.Message,
+			MessageId: info.ID,
+			CreatedAt: info.CreatedAt.Format(time.RFC3339),
+		})
+	}
+
+	return &sms.ListSmsResponse{
+		Sms: smsInfos,
 	}, nil
 }

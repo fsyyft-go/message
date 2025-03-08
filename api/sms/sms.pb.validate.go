@@ -277,3 +277,237 @@ var _ interface {
 	Cause() error
 	ErrorName() string
 } = SendSmsResponseValidationError{}
+
+// Validate checks the field values on ListSmsRequest with the rules defined in
+// the proto definition for this message. If any rules are violated, the first
+// error encountered is returned, or nil if there are no violations.
+func (m *ListSmsRequest) Validate() error {
+	return m.validate(false)
+}
+
+// ValidateAll checks the field values on ListSmsRequest with the rules defined
+// in the proto definition for this message. If any rules are violated, the
+// result is a list of violation errors wrapped in ListSmsRequestMultiError,
+// or nil if none found.
+func (m *ListSmsRequest) ValidateAll() error {
+	return m.validate(true)
+}
+
+func (m *ListSmsRequest) validate(all bool) error {
+	if m == nil {
+		return nil
+	}
+
+	var errors []error
+
+	if len(errors) > 0 {
+		return ListSmsRequestMultiError(errors)
+	}
+
+	return nil
+}
+
+// ListSmsRequestMultiError is an error wrapping multiple validation errors
+// returned by ListSmsRequest.ValidateAll() if the designated constraints
+// aren't met.
+type ListSmsRequestMultiError []error
+
+// Error returns a concatenation of all the error messages it wraps.
+func (m ListSmsRequestMultiError) Error() string {
+	msgs := make([]string, 0, len(m))
+	for _, err := range m {
+		msgs = append(msgs, err.Error())
+	}
+	return strings.Join(msgs, "; ")
+}
+
+// AllErrors returns a list of validation violation errors.
+func (m ListSmsRequestMultiError) AllErrors() []error { return m }
+
+// ListSmsRequestValidationError is the validation error returned by
+// ListSmsRequest.Validate if the designated constraints aren't met.
+type ListSmsRequestValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e ListSmsRequestValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e ListSmsRequestValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e ListSmsRequestValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e ListSmsRequestValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e ListSmsRequestValidationError) ErrorName() string { return "ListSmsRequestValidationError" }
+
+// Error satisfies the builtin error interface
+func (e ListSmsRequestValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sListSmsRequest.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = ListSmsRequestValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = ListSmsRequestValidationError{}
+
+// Validate checks the field values on ListSmsResponse with the rules defined
+// in the proto definition for this message. If any rules are violated, the
+// first error encountered is returned, or nil if there are no violations.
+func (m *ListSmsResponse) Validate() error {
+	return m.validate(false)
+}
+
+// ValidateAll checks the field values on ListSmsResponse with the rules
+// defined in the proto definition for this message. If any rules are
+// violated, the result is a list of violation errors wrapped in
+// ListSmsResponseMultiError, or nil if none found.
+func (m *ListSmsResponse) ValidateAll() error {
+	return m.validate(true)
+}
+
+func (m *ListSmsResponse) validate(all bool) error {
+	if m == nil {
+		return nil
+	}
+
+	var errors []error
+
+	for idx, item := range m.GetSms() {
+		_, _ = idx, item
+
+		if all {
+			switch v := interface{}(item).(type) {
+			case interface{ ValidateAll() error }:
+				if err := v.ValidateAll(); err != nil {
+					errors = append(errors, ListSmsResponseValidationError{
+						field:  fmt.Sprintf("Sms[%v]", idx),
+						reason: "embedded message failed validation",
+						cause:  err,
+					})
+				}
+			case interface{ Validate() error }:
+				if err := v.Validate(); err != nil {
+					errors = append(errors, ListSmsResponseValidationError{
+						field:  fmt.Sprintf("Sms[%v]", idx),
+						reason: "embedded message failed validation",
+						cause:  err,
+					})
+				}
+			}
+		} else if v, ok := interface{}(item).(interface{ Validate() error }); ok {
+			if err := v.Validate(); err != nil {
+				return ListSmsResponseValidationError{
+					field:  fmt.Sprintf("Sms[%v]", idx),
+					reason: "embedded message failed validation",
+					cause:  err,
+				}
+			}
+		}
+
+	}
+
+	if len(errors) > 0 {
+		return ListSmsResponseMultiError(errors)
+	}
+
+	return nil
+}
+
+// ListSmsResponseMultiError is an error wrapping multiple validation errors
+// returned by ListSmsResponse.ValidateAll() if the designated constraints
+// aren't met.
+type ListSmsResponseMultiError []error
+
+// Error returns a concatenation of all the error messages it wraps.
+func (m ListSmsResponseMultiError) Error() string {
+	msgs := make([]string, 0, len(m))
+	for _, err := range m {
+		msgs = append(msgs, err.Error())
+	}
+	return strings.Join(msgs, "; ")
+}
+
+// AllErrors returns a list of validation violation errors.
+func (m ListSmsResponseMultiError) AllErrors() []error { return m }
+
+// ListSmsResponseValidationError is the validation error returned by
+// ListSmsResponse.Validate if the designated constraints aren't met.
+type ListSmsResponseValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e ListSmsResponseValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e ListSmsResponseValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e ListSmsResponseValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e ListSmsResponseValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e ListSmsResponseValidationError) ErrorName() string { return "ListSmsResponseValidationError" }
+
+// Error satisfies the builtin error interface
+func (e ListSmsResponseValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sListSmsResponse.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = ListSmsResponseValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = ListSmsResponseValidationError{}

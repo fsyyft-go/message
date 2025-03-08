@@ -38,3 +38,7 @@ func (s *Sms) Save(ctx context.Context, sms *biz.SmsInfo) error {
 
 	return nil
 }
+
+func (s *Sms) List(ctx context.Context) ([]*biz.SmsInfo, error) {
+	return s.cache.List(), nil
+}

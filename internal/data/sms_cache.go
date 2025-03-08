@@ -1,6 +1,7 @@
 package data
 
 import (
+	"sort"
 	"time"
 
 	"github.com/fsyyft-go/kit/log"
@@ -51,8 +52,16 @@ func (s *SmsCache) Set(key string, value *biz.SmsInfo) {
 	s.c[key] = value
 }
 
-func (s *SmsCache) Get(key string) *biz.SmsInfo {
-	return s.c[key]
+func (s *SmsCache) List() []*biz.SmsInfo {
+	infos := make([]*biz.SmsInfo, 0, len(s.c))
+	for _, info := range s.c {
+		infos = append(infos, info)
+	}
+	// 按时间倒序排序。
+	sort.Slice(infos, func(i, j int) bool {
+		return infos[i].CreatedAt.After(infos[j].CreatedAt)
+	})
+	return infos
 }
 
 // 清理过期记录，删除创建时间超过 1 小时的记录。

@@ -23,6 +23,7 @@ type (
 
 	SmsRepo interface {
 		Save(ctx context.Context, sms *SmsInfo) error
+		List(ctx context.Context) ([]*SmsInfo, error)
 	}
 )
 
@@ -56,4 +57,8 @@ func (s *SmsBiz) SendSms(ctx context.Context, sms *SmsInfo) error {
 	}
 
 	return nil
+}
+
+func (s *SmsBiz) List(ctx context.Context) ([]*SmsInfo, error) {
+	return s.repo.List(ctx)
 }
