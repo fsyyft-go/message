@@ -12,6 +12,32 @@ import (
 	"github.com/fsyyft-go/sms-bridge/internal/config"
 )
 
+// 仓储接口定义开始。
+
+type (
+	// SmsRepo 定义了短信存储的仓储接口。
+	// 该接口提供了保存和查询短信记录的基本功能。
+	// 具体实现可以是内存缓存、数据库等多种形式。
+	SmsRepo interface {
+		// Save 保存短信记录。
+		// 参数:
+		//   ctx: 上下文。
+		//   sms: 短信记录。
+		// 返回:
+		//   错误信息。
+		Save(ctx context.Context, sms *SmsInfo) error
+
+		// List 查询短信记录。
+		// 参数:
+		//   ctx: 上下文。
+		// 返回:
+		//   短信记录列表。
+		List(ctx context.Context) ([]*SmsInfo, error)
+	}
+)
+
+// 仓储接口定义结束。
+
 type (
 	SmsInfo struct {
 		ID        string    `json:"id"`
@@ -19,11 +45,6 @@ type (
 		To        string    `json:"to"`
 		Message   string    `json:"message"`
 		CreatedAt time.Time `json:"created_at"`
-	}
-
-	SmsRepo interface {
-		Save(ctx context.Context, sms *SmsInfo) error
-		List(ctx context.Context) ([]*SmsInfo, error)
 	}
 )
 
