@@ -6,7 +6,6 @@ package data
 
 import (
 	"context"
-	"errors"
 
 	"github.com/fsyyft-go/kit/log"
 	"github.com/fsyyft-go/sms-bridge/internal/biz"
@@ -21,16 +20,21 @@ type (
 	Sms struct {
 		logger log.Logger
 		cfg    *config.Config
+
+		cache *SmsCache
 	}
 )
 
-func NewSmsRepo(logger log.Logger, cfg *config.Config) biz.SmsRepo {
+func NewSmsRepo(logger log.Logger, cfg *config.Config, cache *SmsCache) biz.SmsRepo {
 	return &Sms{
 		logger: logger.WithField("ddd", "data").WithField("module", "sms"),
 		cfg:    cfg,
+		cache:  cache,
 	}
 }
 
 func (s *Sms) Save(ctx context.Context, sms *biz.SmsInfo) error {
-	return errors.New("not implemented")
+	s.cache.Set(sms.ID, sms)
+
+	return nil
 }

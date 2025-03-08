@@ -10,6 +10,7 @@ import (
 
 var (
 	ProviderSet = wire.NewSet(
+		NewSmsCache,
 		NewSmsRepo,
 	)
 )

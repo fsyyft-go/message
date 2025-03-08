@@ -35,15 +35,22 @@ func wireServer(cfg *config.Config) (*server.WebServer, func(), error) {
 	if err != nil {
 		return nil, nil, err
 	}
-	smsRepo := data.NewSmsRepo(logLogger, cfg)
-	smsBiz := biz.NewSmsBiz(logLogger, cfg, smsRepo)
-	smsService := service.NewSmsService(logLogger, cfg, smsBiz)
-	webServer, cleanup2, err := server.NewWebServer(logLogger, cfg, smsService)
+	smsCache, cleanup2, err := data.NewSmsCache(logLogger, cfg)
 	if err != nil {
 		cleanup()
 		return nil, nil, err
 	}
+	smsRepo := data.NewSmsRepo(logLogger, cfg, smsCache)
+	smsBiz := biz.NewSmsBiz(logLogger, cfg, smsRepo)
+	smsService := service.NewSmsService(logLogger, cfg, smsBiz)
+	webServer, cleanup3, err := server.NewWebServer(logLogger, cfg, smsService)
+	if err != nil {
+		cleanup2()
+		cleanup()
+		return nil, nil, err
+	}
 	return webServer, func() {
+		cleanup3()
 		cleanup2()
 		cleanup()
 	}, nil
