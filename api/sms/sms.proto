@@ -1,0 +1,82 @@
+// Copyright 2025 fsyyft-go
+//
+// Licensed under the MIT License. See LICENSE file in the project root for full license information.
+
+// 定义 Protocol Buffers 语法版本为 proto3。
+syntax = "proto3";
+
+// 指定 Protocol Buffers 包名。
+package api.sms;
+
+// 导入 Google API 注解，用于定义 HTTP 路由。
+import "google/api/annotations.proto";
+// 导入验证规则，用于请求参数验证。
+import "validate/validate.proto";
+
+// 指定生成的 Go 代码的包路径和包名。
+option go_package = "github.com/fsyyft-go/sms-bridge/api/sms;sms";
+
+// SendSmsRequest 定义发送短信的请求参数。
+message SendSmsRequest {
+  // 发送方手机号，支持"+"开头后跟数字，或20位内的纯数字。
+  string from = 1 [(validate.rules).string = { pattern: "^(\\+\\d+|\\d{1,20})$" }];
+  // 接收方手机号，必须符合中国大陆手机号格式。
+  // TODO iPhone 快捷指令的 + 号会被识别为空格，需要处理。
+  string to = 2;
+  // 短信内容，最大长度为 5120 字符。
+  string message = 3 [(validate.rules).string = { max_len: 5120 }];
+}
+
+// SendSmsResponse 定义发送短信的响应结果。
+message SendSmsResponse {
+  // 短信唯一标识符。
+  string message_id = 1;
+}
+
+// ListSmsRequest 定义查询短信列表的请求参数。
+message ListSmsRequest {
+}
+
+// SmsInfo 定义短信信息结构。
+message SmsInfo {
+  // 发送方手机号。
+  string from = 1;
+  // 接收方手机号。
+  string to = 2;
+  // 短信内容。
+  string message = 3;
+  // 短信唯一标识符。
+  string message_id = 4;
+  // 创建时间，ISO8601 格式的字符串。
+  string created_at = 5;
+}
+
+// ListSmsResponse 定义查询短信列表的响应结果。
+message ListSmsResponse {
+  // 短信列表。
+  repeated SmsInfo sms = 1;
+}
+
+// SmsService 定义短信服务接口。
+service SmsService {
+  // SendSms 发送短信。
+  // 提供两种 HTTP 路由：
+  // 1. GET /sms/bridge
+  // 2. GET /sms/bridge/?from={from}&to={to}&message={message}
+  rpc SendSms(SendSmsRequest) returns (SendSmsResponse) {
+    option (google.api.http) = {
+      get: "sms/bridge"
+      additional_bindings{
+        get: "sms/bridge/?from={from}&to={to}&message={message}"
+      }
+    };
+  }
+
+  // ListSms 查询短信列表。
+  // HTTP 路由：GET /sms/list
+  rpc ListSms(ListSmsRequest) returns (ListSmsResponse) {
+    option (google.api.http) = {
+      get: "sms/list"
+    };
+  }
+}

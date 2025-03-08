@@ -1,0 +1,76 @@
+// Copyright 2025 fsyyft-go
+//
+// Licensed under the MIT License. See LICENSE file in the project root for full license information.
+
+// 定义 Protocol Buffers 语法版本为 proto3。
+syntax = "proto3";
+
+// 指定 Protocol Buffers 包名。
+package internal.config;
+
+// 指定生成的 Go 代码的包路径和包名。
+option go_package = "github.com/fsyyft-go/sms-bridge/internal/config;config";
+
+// 使用 _ 命名可能出现解析失败，原因未知。
+
+// Config 定义应用程序的总体配置结构。
+message Config {
+  // HTTP 服务器配置。
+  HTTP http = 1;
+  // 日志配置。
+  Log log = 2;
+  // 短信服务配置。
+  Sms sms = 3;
+}
+
+// HTTP 定义 HTTP 服务器的配置。
+message HTTP {
+  // 服务器监听地址。
+  string addr = 1;
+  // 服务器监听端口。
+  int32 port = 2;
+  // 基本认证配置。
+  BasicAuth basicauth = 3;
+}
+
+// BasicAuth 定义基本认证的配置。
+message BasicAuth {
+  // 是否启用基本认证。
+  bool enabled = 1;
+  // 认证域，显示在浏览器认证对话框中。
+  string realm = 2;
+  // 用户凭证列表。
+  repeated Credential credentials = 3;
+}
+
+// Credential 定义用户凭证。
+message Credential {
+  // 用户名。
+  string username = 1;
+  // 密码。
+  string password = 2;
+}
+
+// Log 定义日志系统的配置。
+message Log {
+  // 日志类型，如 logrus。
+  string type = 1;
+  // 日志输出路径。
+  string output = 2;
+  // 日志级别，如 debug、info、warn、error。
+  string level = 3;
+}
+
+// Sms 定义短信服务的配置。
+message Sms {
+  // 缓存配置。
+  Cache cache = 1;
+}
+
+// Cache 定义短信缓存的配置。
+message Cache {
+  // 清理间隔时间（秒）。
+  int32 interval = 1;
+  // 缓存过期时间（秒）。
+  int32 time = 2;
+}

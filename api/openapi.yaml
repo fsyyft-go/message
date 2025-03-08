@@ -1,0 +1,178 @@
+# Generated with protoc-gen-openapi
+# https://github.com/google/gnostic/tree/master/cmd/protoc-gen-openapi
+
+openapi: 3.0.3
+info:
+    title: SmsService API
+    description: SmsService 定义短信服务接口。
+    version: 0.0.1
+paths:
+    sms/bridge:
+        get:
+            tags:
+                - SmsService
+            description: |-
+                SendSms 发送短信。
+                 提供两种 HTTP 路由：
+                 1. GET /sms/bridge
+                 2. GET /sms/bridge/?from={from}&to={to}&message={message}
+            operationId: SmsService_SendSms
+            parameters:
+                - name: from
+                  in: query
+                  description: 发送方手机号，支持"+"开头后跟数字，或20位内的纯数字。
+                  schema:
+                    type: string
+                - name: to
+                  in: query
+                  description: |-
+                    接收方手机号，必须符合中国大陆手机号格式。
+                     TODO iPhone 快捷指令的 + 号会被识别为空格，需要处理。
+                  schema:
+                    type: string
+                - name: message
+                  in: query
+                  description: 短信内容，最大长度为 5120 字符。
+                  schema:
+                    type: string
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/SendSmsResponse'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+    sms/bridge/?from={message:
+        get:
+            tags:
+                - SmsService
+            description: |-
+                SendSms 发送短信。
+                 提供两种 HTTP 路由：
+                 1. GET /sms/bridge
+                 2. GET /sms/bridge/?from={from}&to={to}&message={message}
+            operationId: SmsService_SendSms
+            parameters:
+                - name: from
+                  in: path
+                  description: 发送方手机号，支持"+"开头后跟数字，或20位内的纯数字。
+                  required: true
+                  schema:
+                    type: string
+                - name: to
+                  in: path
+                  description: |-
+                    接收方手机号，必须符合中国大陆手机号格式。
+                     TODO iPhone 快捷指令的 + 号会被识别为空格，需要处理。
+                  required: true
+                  schema:
+                    type: string
+                - name: message
+                  in: path
+                  description: 短信内容，最大长度为 5120 字符。
+                  required: true
+                  schema:
+                    type: string
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/SendSmsResponse'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+    sms/list:
+        get:
+            tags:
+                - SmsService
+            description: |-
+                ListSms 查询短信列表。
+                 HTTP 路由：GET /sms/list
+            operationId: SmsService_ListSms
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/ListSmsResponse'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+components:
+    schemas:
+        GoogleProtobufAny:
+            type: object
+            properties:
+                '@type':
+                    type: string
+                    description: The type of the serialized message.
+            additionalProperties: true
+            description: Contains an arbitrary serialized message along with a @type that describes the type of the serialized message.
+        ListSmsResponse:
+            type: object
+            properties:
+                sms:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/SmsInfo'
+                    description: 短信列表。
+            description: ListSmsResponse 定义查询短信列表的响应结果。
+        SendSmsResponse:
+            type: object
+            properties:
+                messageId:
+                    type: string
+                    description: 短信唯一标识符。
+            description: SendSmsResponse 定义发送短信的响应结果。
+        SmsInfo:
+            type: object
+            properties:
+                from:
+                    type: string
+                    description: 发送方手机号。
+                to:
+                    type: string
+                    description: 接收方手机号。
+                message:
+                    type: string
+                    description: 短信内容。
+                messageId:
+                    type: string
+                    description: 短信唯一标识符。
+                createdAt:
+                    type: string
+                    description: 创建时间，ISO8601 格式的字符串。
+            description: SmsInfo 定义短信信息结构。
+        Status:
+            type: object
+            properties:
+                code:
+                    type: integer
+                    description: The status code, which should be an enum value of [google.rpc.Code][google.rpc.Code].
+                    format: int32
+                message:
+                    type: string
+                    description: A developer-facing error message, which should be in English. Any user-facing error message should be localized and sent in the [google.rpc.Status.details][google.rpc.Status.details] field, or localized by the client.
+                details:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/GoogleProtobufAny'
+                    description: A list of messages that carry the error details.  There is a common set of message types for APIs to use.
+            description: 'The `Status` type defines a logical error model that is suitable for different programming environments, including REST APIs and RPC APIs. It is used by [gRPC](https://github.com/grpc). Each `Status` message contains three pieces of data: error code, error message, and error details. You can find out more about this error model and how to work with it in the [API Design Guide](https://cloud.google.com/apis/design/errors).'
+tags:
+    - name: SmsService
