@@ -74,3 +74,26 @@ message Cache {
   // 缓存过期时间（秒）。
   int32 time = 2;
 }
+
+message Pop {
+  // 是否启用 POP 服务。
+  bool enable = 1;
+  // POP 服务器地址。
+  string host = 2;
+  // POP 服务器端口。
+  int32 port = 3;
+  // 是否启用 TLS。
+  bool tlsenable = 4;
+  // 用户名。
+  string user = 5;
+  // 密码。
+  string password = 6;
+  // 每次读取邮件数量。
+  int32 oncecount = 7;
+  // 拨号超时时间（秒）。
+  int32 dialtimeout = 8;
+  // 读取超时时间（秒）。
+  int32 readtimeout = 9;
+  // 写入超时时间（秒）。
+  int32 writetimeout = 10;
+}
